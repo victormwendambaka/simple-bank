@@ -11,6 +11,6 @@ A dependency-free banking demo: `index.html`, `style.css`, `app.js`. No build st
 Deleting needs the account to be dormant (no activity for N days, default 90), have a zero balance, and have no outstanding loan.
 
 ## Run it
-Open `index.html` in a browser (or use the VS Code Live Server extension). Use "Load sample data" in Manage to try it fast; ACC-1003 is already dormant.
+Open `index.html` in a browser . Use "Load sample data" in Manage to try it fast; ACC-1003 is already dormant.
 
-Amounts are stored in cents to avoid floating-point errors. Demo only: no authentication or server.
+Amounts are stored in cents to avoid floating-point errors.
