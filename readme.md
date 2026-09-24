@@ -1,26 +1,16 @@
 # Simple Bank
 
-A dependency-free banking transaction interface. One HTML file, no build step. Data is saved in the browser's localStorage.
+A dependency-free banking demo: `index.html`, `style.css`, `app.js`. No build step; data lives in the browser's localStorage.
 
 ## Features
+- **Overview:** totals and clickable account cards (click one to select it for transactions)
+- **Transact:** deposit, withdraw, transfer, repay loan, all with inline validation (e.g. "Insufficient balance") and currency-masked amount fields
+- **Manage:** create account, take a 10,000 KES loan (creates a linked loan account), delete a dormant account, load sample data, reset all data
+- **Activity:** search plus filters by account, type and date range
 
-1. **Create a bank account** with an optional opening deposit
-2. **Deposit** funds into an account
-3. **Withdraw** funds (blocked if the balance is too low)
-4. **Transfer** funds between two accounts
-5. **Delete a dormant account**. An account is dormant after N days without activity (default 90, adjustable). It must also have a zero balance and no outstanding loan.
-6. **Bonus: loan.** "Take 10,000 KES loan" creates a loan account (`LN-xxxx`) linked to the bank account and disburses KES 10,000 into it.
-
-Amounts are stored in cents to avoid floating-point errors.
+Deleting needs the account to be dormant (no activity for N days, default 90), have a zero balance, and have no outstanding loan.
 
 ## Run it
+Open `index.html` in a browser (or use the VS Code Live Server extension). Use "Load sample data" in Manage to try it fast; ACC-1003 is already dormant.
 
-Open `index.html` in a browser. To host it, enable GitHub Pages on the repo (Settings → Pages → deploy from `main`, root).
-
-## Try the delete flow
-
-A new account is never dormant, so set "Dormant after" to `0`, withdraw the balance to zero, then click Delete.
-
-## Limitations
-
-This is a demo. There is no authentication, no server, and no loan repayment, so an account with a loan cannot be deleted.
+Amounts are stored in cents to avoid floating-point errors. Demo only: no authentication or server.

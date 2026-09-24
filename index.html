@@ -1,109 +1,102 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Simple Bank</title>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Bank</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<h1>Simple Bank</h1>
+<p class="sub">Data is saved in this browser only.</p>
+<!-- Status messages from app.js (screen readers announce changes) -->
+<p id="msg" role="status" aria-live="polite"></p>
 
-        <link rel="stylesheet" href="style.css">
-        
-    </head>
-    <body>
-        <main>
+<!-- ===== TABS ===== -->
+<div class="tabs" role="tablist" aria-label="Bank sections">
+<button role="tab" id="t-overview" data-tab="overview" aria-controls="p-overview">Overview</button>
+<button role="tab" id="t-transact" data-tab="transact" aria-controls="p-transact">Transact</button>
+<button role="tab" id="t-manage" data-tab="manage" aria-controls="p-manage">Manage</button>
+<button role="tab" id="t-activity" data-tab="activity" aria-controls="p-activity">Activity</button>
+</div>
 
-            <!-- ========== PAGE HEADER ========== -->
-            <h1>Simple Bank</h1>
-            <p class="sub">Create accounts, move money, and take a 10,000 KES loan. Data is saved in this browser only.</p>
+<!-- ===== OVERVIEW: totals + clickable account cards ===== -->
+<div id="p-overview" role="tabpanel" aria-labelledby="t-overview">
+<h2>Overview</h2>
+<dl class="stats" id="stats"></dl>
+<h3>Accounts</h3>
+<p class="tag">Select an account to use it in the Transact tab.</p>
+<div class="cards" id="cards"></div>
+</div>
 
-            <!-- Status message area: the JS say() function writes success (green) and error (red) messages here -->
-            <p id="msg" role="status" aria-live="polite"></p>
+<!-- ===== TRANSACT: deposit, withdraw, transfer, repay ===== -->
+<div id="p-transact" role="tabpanel" aria-labelledby="t-transact" hidden>
+<h2>Transact</h2>
+<div class="grid">
+<section><h3>Deposit</h3><form id="fDep" novalidate>
+<label for="dA">Account</label><select id="dA" class="acc"></select>
+<label for="dM">Amount (KES)</label><input id="dM" class="money" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="dM-e"><span class="err" id="dM-e"></span>
+<button>Deposit</button></form></section>
 
-            <!-- ========== ACTION FORMS (one card per banking function) ========== -->
+<section><h3>Withdraw</h3><form id="fWd" novalidate>
+<label for="wA">Account</label><select id="wA" class="acc"></select>
+<label for="wM">Amount (KES)</label><input id="wM" class="money" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="wM-e"><span class="err" id="wM-e"></span>
+<button>Withdraw</button></form></section>
 
-            <div class="grid">
+<section><h3>Transfer</h3><form id="fTr" novalidate>
+<label for="tF">From</label><select id="tF" class="acc"></select>
+<label for="tT">To</label><select id="tT" aria-describedby="tT-e"></select><span class="err" id="tT-e"></span>
+<label for="tM">Amount (KES)</label><input id="tM" class="money" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="tM-e"><span class="err" id="tM-e"></span>
+<button>Transfer</button></form></section>
 
-                <!-- Function 1: Create a bank account -->
-                <section><h2>Create account</h2>
-                    <form id="fNew">
-                        <label for="nName">Account holder</label>
-                        <input id="nName" required>
-                        <label for="nOpen">Opening deposit (KES)</label>
-                        <input id="nOpen" type="number" min="0" step="0.01" value="0">
-                        <button>Create account</button>
-                    </form>
-                </section>
+<section><h3>Repay loan</h3><form id="fRp" novalidate>
+<label for="rA">Account</label><select id="rA" class="acc"></select>
+<p class="tag" id="rH"></p>
+<label for="rM">Amount (KES)</label><input id="rM" class="money" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="rM-e"><span class="err" id="rM-e"></span>
+<button>Repay loan</button></form></section>
+</div>
+</div>
 
-                <!-- Function 2: Deposit funds (the account dropdown is filled by render()) -->
-                <section><h2>Deposit</h2>
-                    <form id="fDep">
-                        <label for="dAcc">Account</label>
-                        <select id="dAcc"></select>
-                        <label for="dAmt">Amount (KES)</label>
-                        <input id="dAmt" type="number" min="0.01" step="0.01" required>
-                        <button>Deposit</button>
-                    </form>
-                </section>
+<!-- ===== MANAGE: create, loan, delete, demo data ===== -->
+<div id="p-manage" role="tabpanel" aria-labelledby="t-manage" hidden>
+<h2>Manage</h2>
+<div class="grid">
+<section><h3>Create account</h3><form id="fNew" novalidate>
+<label for="nN">Account holder</label><input id="nN" aria-describedby="nN-e"><span class="err" id="nN-e"></span>
+<label for="nO">Opening deposit (KES)</label><input id="nO" class="money" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="nO-e"><span class="err" id="nO-e"></span>
+<button>Create account</button></form></section>
 
-                <!-- Function 3: Withdraw funds -->
-                <section><h2>Withdraw</h2>
-                    <form id="fWd">
-                        <label for="wAcc">Account</label>
-                        <select id="wAcc"></select>
-                        <label for="wAmt">Amount (KES)</label>
-                        <input id="wAmt" type="number" min="0.01" step="0.01" required>
-                        <button>Withdraw</button>
-                    </form>
-                </section>
+<section><h3>Selected account</h3>
+<label for="mA">Account</label><select id="mA" class="acc"></select>
+<div class="row"><button type="button" id="bLoan">Take 10,000 KES loan</button>
+<button type="button" id="bDel" class="danger">Delete dormant account</button></div>
+<label for="dorm">Dormant after (days without activity)</label><input id="dorm" type="number" min="0" step="1">
+<p class="tag">Delete needs: dormant, zero balance, no loan. Set days to 0 to test.</p></section>
 
-                <!-- Function 4: Transfer funds between two accounts -->
-                <section><h2>Transfer</h2>
-                    <form id="fTr"><label for="tFrom">From</label>
-                        <select id="tFrom"></select>
-                        <label for="tTo">To</label>
-                        <select id="tTo"></select>
-                        <label for="tAmt">Amount (KES)</label>
-                        <input id="tAmt" type="number" min="0.01" step="0.01" required>
-                        <button>Transfer</button>
-                    </form>
-                </section>
-            </div>
+<section><h3>Demo data</h3>
+<div class="row"><button type="button" id="bSeed" class="ghost">Load sample data</button>
+<button type="button" id="bReset" class="danger">Reset all data</button></div></section>
+</div>
+</div>
 
-            <!-- ========== ACCOUNT LIST ========== -->
-
-            <!-- Function 5 (Delete dormant account) and the bonus loan button live on each account row.
-                The rows themselves are generated by render() in the script below. -->
-            <section class="gap-top">
-                    <h2>Accounts</h2>
-                <!-- Dormancy setting: an account can only be deleted after this many days without activity.
-                    Set it to 0 to test deletion. -->
-                <div class="dorm">
-                    <label for="dorm">Dormant after (days without activity)</label>
-                    <input id="dorm" type="number" min="0" step="1">
-                </div>
-                <div id="list"></div>
-            </section>
-
-            <!-- ========== ACTIVITY LOG ========== -->
-            <!-- Table body is filled by render() with the 30 most recent transactions -->
-            <section>
-                    <h2>Recent activity</h2>
-                    <div class="wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Time</th>
-                                    <th>Account</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Note</th>
-                                </tr>
-                            </thead>
-                            <tbody id="log"></tbody>
-                        </table>
-                    </div>
-            </section>
-        </main>
-<script src="script.js"></script>
-
-    </body>
+<!-- ===== ACTIVITY: search + filters ===== -->
+<div id="p-activity" role="tabpanel" aria-labelledby="t-activity" hidden>
+<h2>Activity</h2>
+<div class="filters" role="search" id="filters">
+<div><label for="fQ">Search</label><input id="fQ" type="search" placeholder="Name, note, type"></div>
+<div><label for="fA">Account</label><select id="fA"></select></div>
+<div><label for="fT">Type</label><select id="fT"><option value="">All types</option><option>Opened</option><option>Deposit</option><option>Withdrawal</option><option>Transfer in</option><option>Transfer out</option><option>Loan disbursed</option><option>Loan repayment</option><option>Deleted</option></select></div>
+<div><label for="fD1">From date</label><input id="fD1" type="date"></div>
+<div><label for="fD2">To date</label><input id="fD2" type="date"></div>
+</div>
+<button type="button" id="fX" class="ghost">Clear filters</button>
+<p class="tag" id="cnt" aria-live="polite"></p>
+<div class="wrap"><table><caption class="sr">Transactions, newest first</caption>
+<thead><tr><th scope="col">Time</th><th scope="col">Account</th><th scope="col">Type</th><th scope="col">Amount</th><th scope="col">Note</th></tr></thead>
+<tbody id="log"></tbody></table></div>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
 </html>
